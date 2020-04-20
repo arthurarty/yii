@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use Yii;
 use yii\web\Controller;
 use yii\data\Pagination;
 use app\models\People;
@@ -9,10 +10,18 @@ use app\models\People;
 class PeopleController extends Controller
 {
     public function actionIndex()
-    {
+    {   
+        $model = new People();
         $query = People::find()->all();
-        return $this->render('index', [
-            'people' => $query,
-        ]);
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        {
+            $model->save();
+            return $this->refresh();
+        } else {
+            return $this->render('index', [
+                'people' => $query,
+                'model' => $model,
+            ]);
+        }
     }
 }
