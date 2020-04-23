@@ -6,9 +6,27 @@ use Yii;
 use yii\web\Controller;
 use yii\data\Pagination;
 use app\models\People;
+use yii\filters\AccessControl;
+
 
 class PeopleController extends Controller
 {
+    public function behaviors(){
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['index'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index'],
+                        'roles' => ['@'],
+                     ],
+                ],
+            ],
+        ];
+    }
+
     public function actionIndex()
     {   
         $model = new People();
